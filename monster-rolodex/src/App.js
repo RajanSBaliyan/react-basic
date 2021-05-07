@@ -1,39 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import axios from 'axios';
+// import logo from './logo.svg';
+import CardList from './components/card-list/card-list.components';
 import './App.css';
+import Heading from './components/heading/heading.components';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      monster: [
-        {
-          name: 'Frankensteins',
-          id: 'asc1',
-        },
-        {
-          name: 'Dracula',
-          id: 'asc2',
-        },
-        {
-          name: 'Zombie',
-          id: 'asc3',
-        },
-      ],
+      monster: [{ name: 'Ernestine' }],
     };
   }
+
+  async componentDidMount() {
+    const response = await axios.get(
+      'https://jsonplaceholder.typicode.com/users',
+    );
+    this.setState({
+      monster: response.data.map((user) => {
+        const monster = {};
+        monster.name = user.name;
+        return monster;
+      }),
+    });
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            <code>{this.state.string}</code>
-          </p>
-          {this.state.monster.map((monster) => (
-            <h1 key={monster.id}>{monster.name}</h1>
-          ))}
-        </header>
+        <Heading name="The list of Culprits"></Heading>
+        <CardList monsters={this.state.monster} />
       </div>
     );
   }
